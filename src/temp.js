@@ -20,3 +20,5 @@ var updateClock= function (time){
 			clock.start();
 		$(".clock").show();
 	};
+
+imageUrl: "../resources/pom2.jpg",	

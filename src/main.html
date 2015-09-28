@@ -9,22 +9,25 @@
 		<link rel="stylesheet" type="text/css" href="../lib/flipclock.css">
 	</head>
 	<body>
+		<h2>Simple Pomodoro</h2>
 		<br/>
 		<div class="clock"></div>
 		
 		<div>
 			<div>
-				<label>Pomodoro Duration</label>
-				<input id="pomTime" type="number" pattern="[0-9]" min="1" />
+				<label class="lbl">Pomodoro Duration</label>
+				<input class="style1" id="pomTime" type="number" pattern="[0-9]" min="1" />
 			</div>
-			<div>
+			<!-- <div>
 				<label>Break Duration</label>
 				<input id="breakTime" type="number" pattern="[0-9]" min="1" />
-			</div>			
+			</div> -->			
 			<div style="clear: both;" />
 
-			<input id="startPomBtn" type="submit" value="Start Pomodoro"> 
-			<input id="cancelPomBtn" type="submit" value="Cancel"> 
+			<div style="float:right">
+				<input class="btn" id="startPomBtn" type="submit" value="Start Pomodoro"> 
+				<input class="btn" id="cancelPomBtn" type="submit" value="Cancel"> 
+			</div>
  		</div>
 	</body>
 </html>
