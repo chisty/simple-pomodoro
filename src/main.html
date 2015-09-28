@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Simple Pomodoro</title>
+		<script type="text/javascript" src="../lib/jquery.js" ></script>
+		<script type="text/javascript" src="../lib/flipclock.min.js" ></script>		
+		<script type="text/javascript" src="main.js" ></script>
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<link rel="stylesheet" type="text/css" href="../lib/flipclock.css">
+	</head>
+	<body>
+		<br/>
+		<div class="clock"></div>
+		
+		<div>
+			<div>
+				<label>Pomodoro Duration</label>
+				<input id="pomDuration" type="number" pattern="[0-9]" min="1" />
+			</div>
+			<div>
+				<label>Break Duration</label>
+				<input id="breakDuration" type="number" pattern="[0-9]" min="1" />
+			</div>			
+			<div style="clear: both;" />
+
+			<input id="startPomBtn" type="submit" value="Start Pomodoro"> 
+			<input id="cancelPomBtn" type="submit" value="Cancel"> 
+ 		</div>
+	</body>
+</html>

@@ -1,0 +1,27 @@
+{
+	"manifest_version": 2,
+
+	"name": "Simple Pomodoro",
+	"description": "A chrome extension for managing time using Pomodoro Technique.",
+	"version": "0.1",
+
+	"browser_action": {
+		"default_icon": "resources/main-icon.png",
+		"default_popup": "src/main.html"
+	},
+
+	"background":{
+		"scripts": ["src/background.js"],
+		"persistent": true
+	},
+
+	"permissions":[
+		"storage",
+		"notifications",
+		"contextMenus",
+		"webRequest",
+		"tabs"
+	]
+
+
+}
