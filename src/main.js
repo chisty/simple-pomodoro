@@ -1,26 +1,42 @@
 $(function (argument) {
 
-	var clock= $('.clock').FlipClock(3000, {
-		countdown: true,
-		clockFace: 'MinuteCounter'
+	$(".clock").hide();
+
+	var updateClock= function (time){
+		var clock= $('.clock').FlipClock(time, {
+			countdown: true,
+			clockFace: 'MinuteCounter'
+		});		
+		$(".clock").show();
+	};	
+
+	chrome.storage.sync.get('pomTimeDB', function(data){
+		if(data.pomTimeDB){
+			var pomTime= data.pomTimeDB;
+			$('#pomTime').val(pomTime);
+			chrome.storage.sync.get('lastSavedTime', function(data){
+				var currentTimeInSecond= new Date().getTime() / 1000;
+				var difference= currentTimeInSecond - data.lastSavedTime;							
+				updateClock(pomTime*60-difference);
+			});
+		}
 	});
 
+	chrome.storage.sync.get('breakTimeDB', function(data){
+		if(data.breakTimeDB){
+			$('#breakTime').val(data.breakTimeDB);
+		}
+	});	
 
-	$('#pomDuration').focusout(function () {
-		var duration= $('#pomDuration').val();
-		if(isNaN(duration) || duration < 0)			
-			alert("Please enter a numeric value greater than 0.")
-		chrome.storage.sync.set({'pomDurationDB' : duration});
-	});
+	$('#startPomBtn').click(function () {	
+		var pomTime= $('#pomTime').val();
+		var breakTime= $('#breakTime').val();	
+		var currentTimeInSecond= new Date().getTime() / 1000;	
 
-	$('#breakDuration').focusout(function () {
-		var breakDuration= $('#breakDuration').val();
-		if(isNaN(breakDuration) || breakDuration < 0)			
-			alert("Please enter a numeric value greater than 0.")
-		chrome.storage.sync.set({'breakDurationDB' : breakDuration});
-	});
-
-	$('#startPomBtn').click(function () {		
-
+		chrome.storage.sync.set({'pomTimeDB' : pomTime});		
+		chrome.storage.sync.set({'breakTimeDB' : breakTime});
+		chrome.storage.sync.set({'lastSavedTime' : currentTimeInSecond});
+		
+		updateClock(pomTime*60);
 	});
 });
