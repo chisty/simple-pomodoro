@@ -4,9 +4,18 @@ $(function (argument) {
 
 	var updateClock= function (time){
 		var clock= $('.clock').FlipClock(time, {
+			autoStart: false,
 			countdown: true,
-			clockFace: 'MinuteCounter'
+			clockFace: 'MinuteCounter',
+			callbacks:{
+				interval: function(){
+					var time= clock.getTime().time;
+					if(time %10 == 0)
+						console.log(time);
+				}
+			}
 		});		
+		clock.start();
 		$(".clock").show();
 	};	
 
@@ -29,7 +38,11 @@ $(function (argument) {
 	});	
 
 	$('#startPomBtn').click(function () {	
-		var pomTime= $('#pomTime').val();
+
+		var bgPage= chrome.extension.getBackgroundPage();
+		bgPage.process(300);
+
+		/*var pomTime= $('#pomTime').val();
 		var breakTime= $('#breakTime').val();	
 		var currentTimeInSecond= new Date().getTime() / 1000;	
 
@@ -37,6 +50,26 @@ $(function (argument) {
 		chrome.storage.sync.set({'breakTimeDB' : breakTime});
 		chrome.storage.sync.set({'lastSavedTime' : currentTimeInSecond});
 		
-		updateClock(pomTime*60);
+		updateClock(pomTime*60);*/
 	});
+
+	$('#cancelPomBtn').click(function () {			
+
+		chrome.runtime.sendMessage({msg: "chisty"}, function(){
+			console.log("Requested from pop up");
+		});
+		/*chrome.storage.sync.set({'pomTimeDB' : 0});		
+		chrome.storage.sync.set({'breakTimeDB' : 0});
+		chrome.storage.sync.set({'lastSavedTime' : undefined});	*/	
+	});
+
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
+		if(request.fromBgMsg == "done"){
+			console.log("Yahooooooo. I got message");
+		}
+	});
+
+	var getDB= function(value){
+		console.log('Popup value is '+value)		;
+	}
 });

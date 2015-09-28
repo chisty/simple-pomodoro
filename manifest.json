@@ -7,11 +7,12 @@
 
 	"browser_action": {
 		"default_icon": "resources/main-icon.png",
+		"default_title": "Simple Pomodoro Extension.",
 		"default_popup": "src/main.html"
 	},
 
 	"background":{
-		"scripts": ["src/background.js"],
+		"scripts": ["lib/jquery.js", "lib/flipclock.min.js", "src/background.js"],
 		"persistent": true
 	},
 
@@ -20,7 +21,8 @@
 		"notifications",
 		"contextMenus",
 		"webRequest",
-		"tabs"
+		"tabs",
+		"management"
 	]
 
 
