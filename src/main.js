@@ -1,21 +1,32 @@
 $(function (argument) {
+	/*$(".clock").hide();*/	
 
-	$(".clock").hide();
-
-	var updateClock= function (time){
-		var clock= $('.clock').FlipClock(time, {
+	var updateClock= function (){			
+		var totalTime= 0;
+		var bgPage= chrome.extension.getBackgroundPage();
+		var timerIsRunning= bgPage.timerIsRunning;
+		if(timerIsRunning){
+			var bgClock= bgPage.clock;		
+			if(bgClock == undefined) return;
+			totalTime= bgClock.getTime().time;
+		}
+					
+		var clock= $('.clock').FlipClock(totalTime, {
 			autoStart: false,
 			countdown: true,
 			clockFace: 'MinuteCounter',
 			callbacks:{
 				interval: function(){
-					var time= clock.getTime().time;
-					if(time %10 == 0)
-						console.log(time);
+					var time= clock.getTime().time;						
+					if(time == 0){
+						clock.stop();						
+					}				
 				}
 			}
 		});		
-		clock.start();
+
+		if(timerIsRunning)		
+			clock.start();
 		$(".clock").show();
 	};	
 
@@ -23,11 +34,7 @@ $(function (argument) {
 		if(data.pomTimeDB){
 			var pomTime= data.pomTimeDB;
 			$('#pomTime').val(pomTime);
-			chrome.storage.sync.get('lastSavedTime', function(data){
-				var currentTimeInSecond= new Date().getTime() / 1000;
-				var difference= currentTimeInSecond - data.lastSavedTime;							
-				updateClock(pomTime*60-difference);
-			});
+			updateClock();
 		}
 	});
 
@@ -38,38 +45,38 @@ $(function (argument) {
 	});	
 
 	$('#startPomBtn').click(function () {	
-
-		var bgPage= chrome.extension.getBackgroundPage();
-		bgPage.process(300);
-
-		/*var pomTime= $('#pomTime').val();
-		var breakTime= $('#breakTime').val();	
-		var currentTimeInSecond= new Date().getTime() / 1000;	
+		var pomTime= $('#pomTime').val();
+		var breakTime= $('#breakTime').val();				
 
 		chrome.storage.sync.set({'pomTimeDB' : pomTime});		
-		chrome.storage.sync.set({'breakTimeDB' : breakTime});
-		chrome.storage.sync.set({'lastSavedTime' : currentTimeInSecond});
-		
-		updateClock(pomTime*60);*/
+		chrome.storage.sync.set({'breakTimeDB' : breakTime});			
+
+		chrome.runtime.sendMessage({msg: "startClockCommand"}, function(data){
+			if(data.success){
+				console.log("Requested from pop up to start the clock in background page.");				
+				updateClock();
+			}			
+		});		
 	});
 
 	$('#cancelPomBtn').click(function () {			
-
-		chrome.runtime.sendMessage({msg: "chisty"}, function(){
-			console.log("Requested from pop up");
-		});
-		/*chrome.storage.sync.set({'pomTimeDB' : 0});		
-		chrome.storage.sync.set({'breakTimeDB' : 0});
-		chrome.storage.sync.set({'lastSavedTime' : undefined});	*/	
+		chrome.runtime.sendMessage({msg: "stopClockCommand"}, function(data){
+			if(data.success){
+				timerIsRunning= false;
+				updateClock();
+			}
+		});		
 	});
 
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
-		if(request.fromBgMsg == "done"){
-			console.log("Yahooooooo. I got message");
+		if(request.msg == "pomodoroCompleteEvent"){
+			var opt= {
+				type: "basic",
+				title: "Success",
+				message: "Pomodoro complete!",
+				iconUrl: "../resources/main-icon.png"
+			};
+			chrome.notifications.create('reset', opt, function(){});
 		}
-	});
-
-	var getDB= function(value){
-		console.log('Popup value is '+value)		;
-	}
+	});	
 });
