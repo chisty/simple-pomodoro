@@ -18,10 +18,7 @@
 
 	"permissions":[
 		"storage",
-		"notifications",
-		"contextMenus",
-		"webRequest",
-		"tabs",
+		"notifications",		
 		"management"
 	]
 

@@ -63,8 +63,8 @@ $(function (argument) {
 			}
 		}
 		else{
-			/*startPomodoro(pomTime * 60);*/
-			startPomodoro(10);
+			startPomodoro(pomTime * 60);
+			/*startPomodoro(10);*/
 		}						
 	});
 
@@ -78,22 +78,6 @@ $(function (argument) {
 			});
 		}			
 	});	
-	
-	
-	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
-		if(request.msg == "complete"){
-			var opt= {
-				type: "basic",
-				title: "Congrates!",
-				message: "Pomodoro complete!",
-				iconUrl: "../resources/main-icon.png",				
-				priority: 0			
-			};
-			
-			chrome.notifications.create("id", opt, function(){});			
-		}
-	});
-
 
 	/*chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 		if(request.msg == "complete"){
